@@ -10,16 +10,24 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
 
+    def createTilemap(self):
+        for i, row in enumerate(TILE_MAP):
+            for j, col in enumerate(row):
+                if col == "B":
+                    Block(self, j, i)
+                if col == "P":
+                    Player(self, j, i)
+
     def new(self):
         self.playing = True
-
         # empty groups that we can add our sprites into later
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.blocks = pygame.sprite.LayeredUpdates() # where walls are stored
         self.enemies = pygame.sprite.LayeredUpdates() # where enemies are stored
         self.attacks = pygame.sprite.LayeredUpdates() # where attack animations are stored
+        self.createTilemap()
 
-        self.player = Player(self, 1, 2)
+
 
 
     # contains keypress events
