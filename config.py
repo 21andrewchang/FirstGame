@@ -5,6 +5,7 @@ FPS = 60
  
 # MOVEMENT
 PLAYER_SPEED = 3
+ENEMY_SPEED = 1
 
 # COLORS
 WHITE = (255,255,255)
@@ -13,7 +14,8 @@ RED = (200,0,0)
 WALL = (18,18,18)
 
 PLAYER_LAYER = 2
-BLOCK_LAYER = 2
+ENEMY_LAYER = 2
+BLOCK_LAYER = 1
 
 
 '''
@@ -31,7 +33,7 @@ TILE_MAP = [
     'B..................B',
     'B..................B',
     'B..................B',
-    'B......BBBBBB......B',
+    'B...E..BBBBBB......B',
     'B..................B',
     'B..................B',
     'B........P.........B',

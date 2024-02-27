@@ -3,7 +3,6 @@ from config import *
 import math
 import random
 
-
 class Player(pygame.sprite.Sprite): # pygame.sprite.Sprite makes it easier to make sprites
     def __init__(self, game, x, y): # pass in game to access variables defined there
         self.game = game
@@ -29,9 +28,13 @@ class Player(pygame.sprite.Sprite): # pygame.sprite.Sprite makes it easier to ma
             - image: what it looks like
             - rect: hitbox
         '''
-        # image_to_load = pygame.image.load("assets")
+        image_to_load = pygame.image.load("./assets/bondosan.jpeg")
+        image_to_load = pygame.transform.scale(image_to_load, (32,32))
         self.image = pygame.Surface([self.width, self.height]) # creates 32x32 rectangle 
-        self.image.fill(WHITE)
+        self.image.set_colorkey(WHITE)
+        self.image.blit(image_to_load, (0,0))
+
+        # hitbox
         self.rect  = self.image.get_rect() # sets hitbox same size as image
         self.rect.x = self.x
         self.rect.y = self.y
@@ -56,7 +59,7 @@ class Player(pygame.sprite.Sprite): # pygame.sprite.Sprite makes it easier to ma
         self.collide('y')
         self.x_change = 0
         self.y_change = 0
-        self.changeColors()
+        # self.changeColors()
 
     def collide(self, direction):
         if direction == "x":
@@ -89,6 +92,56 @@ class Player(pygame.sprite.Sprite): # pygame.sprite.Sprite makes it easier to ma
             self.y_change += PLAYER_SPEED
             self.facing = 'down'
 
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, game, x, y, facing):
+        self.game = game
+        self._layer = ENEMY_LAYER
+        self.groups = self.game.all_sprites, self.game.enemies
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        self.x = x * TILE_SIZE
+        self.y = y * TILE_SIZE
+        self.width = TILE_SIZE
+        self.height = TILE_SIZE
+
+        self.facing = facing
+        self.x_change = 0
+
+        image_to_load = pygame.image.load("./assets/penginsan.jpg")
+        image_to_load = pygame.transform.scale(image_to_load, (32, 32))
+        self.image = pygame.Surface([self.width, self.height])
+        self.image.set_colorkey(WHITE)
+        self.image.blit(image_to_load, (0,0))
+
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+    def update(self):
+        self.movement(self.facing)
+        self.rect.x += self.x_change
+        self.collide()
+
+    def collide(self):
+        hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+        if hits:
+            if self.x_change > 0:
+                self.rect.x = hits[0].rect.left - self.rect.width
+                self.facing = 'left'
+            if self.x_change < 0:
+                self.rect.x = hits[0].rect.right
+                self.facing = 'right'
+
+    def movement(self, facing):
+        if facing == 'left':
+            self.x_change = -ENEMY_SPEED
+        if facing == 'right':
+            self.x_change = ENEMY_SPEED
+
+
+
+
+        
 class Block(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game

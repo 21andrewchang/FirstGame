@@ -17,6 +17,8 @@ class Game:
                     Block(self, j, i)
                 if col == "P":
                     Player(self, j, i)
+                if col == "E":
+                    Enemy(self, j, i, 'left')
 
     def new(self):
         self.playing = True
@@ -26,9 +28,6 @@ class Game:
         self.enemies = pygame.sprite.LayeredUpdates() # where enemies are stored
         self.attacks = pygame.sprite.LayeredUpdates() # where attack animations are stored
         self.createTilemap()
-
-
-
 
     # contains keypress events
     def events(self):
