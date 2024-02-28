@@ -19,15 +19,19 @@ class Game:
                     Player(self, j, i)
                 if col == "E":
                     Enemy(self, j, i, 'left')
+                if col == "H":
+                    House(self, j, i)
 
     def new(self):
         self.playing = True
         # empty groups that we can add our sprites into later
         self.all_sprites = pygame.sprite.LayeredUpdates()
+        self.player = pygame.sprite.LayeredUpdates()
         self.blocks = pygame.sprite.LayeredUpdates() # where walls are stored
         self.enemies = pygame.sprite.LayeredUpdates() # where enemies are stored
         self.attacks = pygame.sprite.LayeredUpdates() # where attack animations are stored
         self.createTilemap()
+        self.center()
 
     # contains keypress events
     def events(self):
@@ -41,6 +45,14 @@ class Game:
     def update(self):
         # calls the update method of every sprite in all_sprites
         self.all_sprites.update()
+
+    def center(self):
+        player = self.player.get_sprite(0)
+        x_diff = player.rect.center[0] - self.screen.get_rect().center[0]
+        y_diff = player.rect.center[1] - self.screen.get_rect().center[1]
+        for sprite in self.all_sprites:
+            sprite.rect.x -= x_diff
+            sprite.rect.y -= y_diff
 
     # displays sprites onto our screen
     def draw(self):

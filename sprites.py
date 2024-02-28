@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite): # pygame.sprite.Sprite makes it easier to ma
     def __init__(self, game, x, y): # pass in game to access variables defined there
         self.game = game
         self._layer = PLAYER_LAYER # tells pygame what layer we want this sprite to be in
-        self.groups = self.game.all_sprites # adds player to all_sprites group 
+        self.groups = self.game.all_sprites, self.game.player # adds player to all_sprites group 
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.x = x * TILE_SIZE
         self.y = y * TILE_SIZE
@@ -39,6 +39,10 @@ class Player(pygame.sprite.Sprite): # pygame.sprite.Sprite makes it easier to ma
         self.rect.x = self.x
         self.rect.y = self.y
 
+        # x_diff = self.rect.center[0] - self.game.screen.get_rect().center[0]
+        # y_diff = self.rect.center[1] - self.game.screen.get_rect().center[1]
+
+
     def changeColors(self):
         changes = random.random()
         current_time = pygame.time.get_ticks()
@@ -59,6 +63,9 @@ class Player(pygame.sprite.Sprite): # pygame.sprite.Sprite makes it easier to ma
         self.collide('y')
         self.x_change = 0
         self.y_change = 0
+
+
+
         # self.changeColors()
 
     def collide(self, direction):
@@ -79,16 +86,27 @@ class Player(pygame.sprite.Sprite): # pygame.sprite.Sprite makes it easier to ma
 
     def movement(self):
         keys = pygame.key.get_pressed() # stored list of every key pressed on your keyboard
+        player_center = self.rect.center
+        print(player_center)
+
         if keys[pygame.K_a]:
+            for sprite in self.game.all_sprites:
+                sprite.rect.x += PLAYER_SPEED
             self.x_change -= PLAYER_SPEED
             self.facing = 'left'
         if keys[pygame.K_d]:
+            for sprite in self.game.all_sprites:
+                sprite.rect.x -= PLAYER_SPEED
             self.x_change += PLAYER_SPEED
             self.facing = 'right'
         if keys[pygame.K_w]:
+            for sprite in self.game.all_sprites:
+                sprite.rect.y += PLAYER_SPEED
             self.y_change -= PLAYER_SPEED
             self.facing = 'up'
         if keys[pygame.K_s]:
+            for sprite in self.game.all_sprites:
+                sprite.rect.y -= PLAYER_SPEED
             self.y_change += PLAYER_SPEED
             self.facing = 'down'
 
@@ -142,6 +160,25 @@ class Enemy(pygame.sprite.Sprite):
 
 
         
+class House(pygame.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.game = game
+        self._layer = BLOCK_LAYER
+        self.groups = self.game.all_sprites, self.game.blocks
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        self.x = x * TILE_SIZE
+        self.y = y * TILE_SIZE
+        self.width = TILE_SIZE * 5
+        self.height = TILE_SIZE * 5
+
+        self.image = pygame.Surface([self.width, self.height])
+        self.image.fill(WHITE)
+
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+
 class Block(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
