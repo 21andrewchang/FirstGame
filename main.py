@@ -21,6 +21,8 @@ class Game:
                     Enemy(self, j, i, 'left')
                 if col == "H":
                     House(self, j, i)
+                if col == ".":
+                    Ground(self, j, i)
 
     def new(self):
         self.playing = True
